@@ -3,12 +3,12 @@ package archives.tater.kitchenprojectiles.mixin;
 import archives.tater.kitchenprojectiles.KnifeEntity;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,19 +16,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PersistentProjectileEntity.class)
-public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
-    public PersistentProjectileEntityMixin(EntityType<? extends ProjectileEntity> entityType, World world) {
+@Mixin(AbstractArrow.class)
+public abstract class PersistentProjectileEntityMixin extends Projectile {
+    public PersistentProjectileEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 
     @Shadow
-    public abstract boolean isNoClip();
+    public abstract boolean isNoPhysics();
 
     @SuppressWarnings("ConstantValue")
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;isCritical()Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;isCritArrow()Z")
     )
     private boolean hideNoClip(boolean value) {
         return value || (Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage();
@@ -36,29 +36,29 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
 
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;isTouchingWater()Z", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;isInWater()Z", ordinal = 1)
     )
     private boolean restoreNoClip(boolean value) {
-        return !isNoClip();
+        return !isNoPhysics();
     }
 
     @SuppressWarnings("ConstantValue")
     @Inject(
-            method = "applyCollision",
+            method = "stepMoveAndHit",
             at = @At(value = "INVOKE", target = "Ljava/util/Objects;requireNonNullElse(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"),
             cancellable = true
     )
     private void cancelCollision(BlockHitResult blockHitResult, CallbackInfo ci, @Local EntityHitResult entityHitResult) {
-        if ((Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage() && entityHitResult == null && isNoClip()) {
-            setPosition(getEntityPos().add(getVelocity()));
+        if ((Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage() && entityHitResult == null && isNoPhysics()) {
+            setPos(position().add(getDeltaMovement()));
             ci.cancel();
         }
     }
 
     @SuppressWarnings("ConstantValue")
     @ModifyExpressionValue(
-            method = "applyCollision",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;noClip:Z")
+            method = "stepMoveAndHit",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;noPhysics:Z")
     )
     private boolean allowCollision(boolean original, @Local EntityHitResult entityHitResult) {
         return original && entityHitResult != null && (!((Object) this instanceof KnifeEntity knifeEntity) || knifeEntity.hasDealtDamage());
