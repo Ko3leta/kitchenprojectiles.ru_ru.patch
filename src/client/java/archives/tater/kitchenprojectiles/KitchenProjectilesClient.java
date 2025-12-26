@@ -4,12 +4,16 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ConditionalItemModel;
 import net.minecraft.client.renderer.item.properties.conditional.IsUsingItem;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
+
 import vectorwing.farmersdelight.common.registry.ModItems;
 
 import java.util.List;
@@ -17,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class KitchenProjectilesClient implements ClientModInitializer {
-	public static final ResourceLocation THROWING_PREDICATE = KitchenProjectiles.id("throwing");
+	public static final Identifier THROWING_PREDICATE = KitchenProjectiles.id("throwing");
 
 	@Override
 	public void onInitializeClient() {

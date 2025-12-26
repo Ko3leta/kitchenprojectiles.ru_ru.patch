@@ -3,9 +3,12 @@ package archives.tater.kitchenprojectiles.mixin;
 import archives.tater.kitchenprojectiles.KnifeEntity;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -28,7 +31,7 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
     @SuppressWarnings("ConstantValue")
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;isCritArrow()Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isCritArrow()Z")
     )
     private boolean hideNoClip(boolean value) {
         return value || (Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage();
@@ -36,7 +39,7 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
 
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;isInWater()Z", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isInWater()Z", ordinal = 1)
     )
     private boolean restoreNoClip(boolean value) {
         return !isNoPhysics();
@@ -48,19 +51,20 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
             at = @At(value = "INVOKE", target = "Ljava/util/Objects;requireNonNullElse(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"),
             cancellable = true
     )
-    private void cancelCollision(BlockHitResult blockHitResult, CallbackInfo ci, @Local EntityHitResult entityHitResult) {
+    private void cancelCollision(BlockHitResult blockHitResult, CallbackInfo ci, @Local EntityHitResult entityHitResult, @Share("hit")LocalRef<EntityHitResult> hit) {
         if ((Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage() && entityHitResult == null && isNoPhysics()) {
             setPos(position().add(getDeltaMovement()));
             ci.cancel();
         }
+        hit.set(entityHitResult);
     }
 
     @SuppressWarnings("ConstantValue")
     @ModifyExpressionValue(
             method = "stepMoveAndHit",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;noPhysics:Z")
+            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;noPhysics:Z")
     )
-    private boolean allowCollision(boolean original, @Local EntityHitResult entityHitResult) {
-        return original && entityHitResult != null && (!((Object) this instanceof KnifeEntity knifeEntity) || knifeEntity.hasDealtDamage());
+    private boolean allowCollision(boolean original, @Share("hit") LocalRef<EntityHitResult> hit) {
+        return original && hit.get() != null && (!((Object) this instanceof KnifeEntity knifeEntity) || knifeEntity.hasDealtDamage());
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -27,13 +27,13 @@ public class KitchenProjectiles implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public static final int MIN_USE_DURATION = 6;
 
-    private static <T extends Entity> EntityType<T> register(ResourceLocation id, EntityType.Builder<T> type) {
+    private static <T extends Entity> EntityType<T> register(Identifier id, EntityType.Builder<T> type) {
         var key = ResourceKey.create(Registries.ENTITY_TYPE, id);
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type.build(key));
     }

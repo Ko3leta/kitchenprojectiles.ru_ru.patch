@@ -15,7 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -178,8 +178,8 @@ public class KnifeEntity extends AbstractArrow {
                     enchantment.value().modifyDamageFilteredValue(ModDataComponents.BACKSTABBING.get(), serverLevel, powerLevel, stack, this, damageSource, dmg)
             );
 
-            if (damage != dmg.getValue()) {
-                damage = dmg.getValue();
+            if (damage != dmg.floatValue()) {
+                damage = dmg.floatValue();
                 serverLevel.playSound(null, getX(), getY(), getZ(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         }

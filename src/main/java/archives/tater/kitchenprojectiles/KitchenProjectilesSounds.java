@@ -2,12 +2,12 @@ package archives.tater.kitchenprojectiles;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
 public class KitchenProjectilesSounds {
-    private static SoundEvent of(ResourceLocation id) {
+    private static SoundEvent of(Identifier id) {
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
