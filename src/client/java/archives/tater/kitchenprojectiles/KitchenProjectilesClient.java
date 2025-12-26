@@ -4,7 +4,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.item.ConditionalItemModel;
 import net.minecraft.client.renderer.item.properties.conditional.IsUsingItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackType;
 
 import vectorwing.farmersdelight.common.registry.ModItems;
 
