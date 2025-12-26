@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class KitchenProjectilesClient implements ClientModInitializer {
-	public static final Identifier THROWING_PREDICATE = KitchenProjectiles.id("throwing");
-
 	@Override
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
