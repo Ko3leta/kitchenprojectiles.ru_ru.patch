@@ -48,6 +48,8 @@ public class KitchenProjectiles implements ModInitializer {
 
 	public static final ResourceKey<DamageType> KNIFE_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, id("knife"));
 
+	public static final TagKey<Item> THROWABLE_KNIVES = TagKey.create(Registries.ITEM, id("throwable_knives"));
+
     public static final TagKey<Item> LIGHT_KNIVES = TagKey.create(Registries.ITEM, id("light_knives"));
 
 	@Override
