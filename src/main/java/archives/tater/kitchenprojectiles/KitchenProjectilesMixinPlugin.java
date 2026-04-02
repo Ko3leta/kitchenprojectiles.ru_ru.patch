@@ -1,6 +1,5 @@
 package archives.tater.kitchenprojectiles;
 
-import moriyashiine.enchancement.common.Enchancement;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -22,7 +21,7 @@ public class KitchenProjectilesMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return FabricLoader.getInstance().isModLoaded(Enchancement.MOD_ID) // Should be inlined
+        return FabricLoader.getInstance().isModLoaded("enchancement")
                 || !mixinClassName.contains("enchancement");
     }
 
