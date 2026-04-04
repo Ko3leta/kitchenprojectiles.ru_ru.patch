@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 
-@Environment(EnvType.CLIENT)
 public class KnifeEntityRenderer extends EntityRenderer<KnifeEntity, KnifeEntityRenderer.KnifeEntityRenderState> {
     private static final float MIN_DISTANCE = 3.5f * 3.5f;
     private final ItemModelResolver itemModelManager;

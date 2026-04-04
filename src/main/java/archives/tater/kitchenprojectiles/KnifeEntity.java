@@ -172,7 +172,9 @@ public class KnifeEntity extends AbstractArrow {
 
         var damage = KitchenProjectilesUtil.getDamage(stack, damageSource, level(), entity);
 
-        if (entity instanceof LivingEntity livingEntity && BackstabbingEnchantment.isLookingBehindTarget(livingEntity, position()) && level() instanceof ServerLevel serverLevel) {
+        if (entity instanceof LivingEntity livingEntity
+                && level() instanceof ServerLevel serverLevel
+                && BackstabbingEnchantment.isLookingBehindTarget(livingEntity, position().add(0, -0.5 * livingEntity.getBbHeight(), 0))) { // fudge backstab because knife is usually higher y than player
             var dmg = new MutableFloat(damage);
             EnchantmentHelper.runIterationOnItem(getPickupItemStackOrigin(), (enchantment, powerLevel) ->
                     enchantment.value().modifyDamageFilteredValue(ModDataComponents.BACKSTABBING.get(), serverLevel, powerLevel, stack, this, damageSource, dmg)

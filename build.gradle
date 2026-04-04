@@ -92,9 +92,9 @@ dependencies {
 		exclude(group: "net.fabricmc")
 	}
 
-    // compileOnly("moriyashiine:enchancement:${project.enchancement_version}") {
-    //     exclude(group: "net.fabricmc")
-    // }
+    compileOnly("moriyashiine:enchancement:${project.enchancement_version}") {
+        exclude(group: "net.fabricmc")
+    }
 }
 
 processResources {
