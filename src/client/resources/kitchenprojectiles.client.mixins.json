@@ -8,5 +8,10 @@
   "plugin": "archives.tater.kitchenprojectiles.KitchenProjectilesMixinPlugin",
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "AvatarRendererMixin",
+    "ItemInHandLayerMixin",
+    "ItemInHandRendererMixin"
+  ]
 }
