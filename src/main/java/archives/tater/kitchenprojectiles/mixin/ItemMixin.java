@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.core.BlockPos;
@@ -18,7 +17,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,6 +34,8 @@ import net.minecraft.world.phys.Vec3;
 
 import org.joml.Quaternionf;
 import vectorwing.farmersdelight.common.registry.ModBlocks;
+
+import static net.minecraft.util.Mth.DEG_TO_RAD;
 
 @Mixin(Item.class)
 public abstract class ItemMixin {
@@ -102,7 +102,7 @@ public abstract class ItemMixin {
             var yaw = spread * spreadIndex;
 
             var opposite = livingEntity.getUpVector(1f);
-            var quaternion = new Quaternionf().setAngleAxis(yaw * Mth.DEG_TO_RAD, opposite.x, opposite.y, opposite.z);
+            var quaternion = new Quaternionf().setAngleAxis(yaw * DEG_TO_RAD, opposite.x, opposite.y, opposite.z);
             var rotation = livingEntity.getViewVector(1f);
             var velocity = rotation.toVector3f().rotate(quaternion);
 

@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +26,7 @@ public class DamageSourceMixin {
     @ModifyVariable(
             method = "getLocalizedDeathMessage",
             at = @At("STORE"),
-            ordinal = 0
+            name = "held"
     )
     private ItemStack useKnifeStack(ItemStack value) {
         return directEntity instanceof KnifeEntity knifeEntity ? knifeEntity.getPickupItemStackOrigin() : value;

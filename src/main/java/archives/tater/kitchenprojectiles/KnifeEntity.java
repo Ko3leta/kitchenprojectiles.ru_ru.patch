@@ -38,12 +38,12 @@ public class KnifeEntity extends AbstractArrow {
     private int slot = -1;
     public int returnTimer;
 
-    protected KnifeEntity(EntityType<? extends AbstractArrow> entityType, Level world) {
-        super(entityType, world);
+    protected KnifeEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public KnifeEntity(Level world, LivingEntity owner, ItemStack stack) {
-        super(KitchenProjectiles.KNIFE_ENTITY, owner, world, stack, null);
+    public KnifeEntity(Level level, LivingEntity owner, ItemStack stack) {
+        super(KitchenProjectiles.KNIFE_ENTITY, owner, level, stack, null);
         entityData.set(TRACKED_STACK, getPickupItemStackOrigin()); // minecraft:intangible_projectile is removed from instance but not copy
         updateLoyalty();
         if (owner instanceof Player playerEntity) {
@@ -208,15 +208,16 @@ public class KnifeEntity extends AbstractArrow {
     }
 
     @Override
-    protected void hitBlockEnchantmentEffects(ServerLevel world, BlockHitResult blockHitResult, ItemStack weaponStack) {
-        EnchantmentHelper.onHitBlock(world,
+    protected void hitBlockEnchantmentEffects(ServerLevel level, BlockHitResult blockHitResult, ItemStack weaponStack) {
+        EnchantmentHelper.onHitBlock(
+                level,
                 weaponStack,
                 this.getOwner() instanceof LivingEntity livingEntity ? livingEntity : null,
                 this,
                 null,
                 blockHitResult.getBlockPos().clampLocationWithin(blockHitResult.getLocation()),
-                world.getBlockState(blockHitResult.getBlockPos()),
-                item -> kill(world));
+                level.getBlockState(blockHitResult.getBlockPos()),
+                _ -> kill(level));
     }
 
     @Override

@@ -18,11 +18,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.objectweb.asm.Opcodes;
 
 @Mixin(AbstractArrow.class)
 public abstract class PersistentProjectileEntityMixin extends Projectile {
-    public PersistentProjectileEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
-        super(entityType, world);
+    public PersistentProjectileEntityMixin(EntityType<? extends Projectile> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Shadow
@@ -31,7 +32,8 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
     @SuppressWarnings("ConstantValue")
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isCritArrow()Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isCritArrow()Z"),
+            name = "physicsEnabled"
     )
     private boolean hideNoClip(boolean value) {
         return value || (Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage();
@@ -39,7 +41,8 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
 
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isInWater()Z", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;isInWater()Z", ordinal = 1),
+            name = "physicsEnabled"
     )
     private boolean restoreNoClip(boolean value) {
         return !isNoPhysics();
@@ -51,7 +54,7 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
             at = @At(value = "INVOKE", target = "Ljava/util/Objects;requireNonNullElse(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"),
             cancellable = true
     )
-    private void cancelCollision(BlockHitResult blockHitResult, CallbackInfo ci, @Local EntityHitResult entityHitResult, @Share("hit")LocalRef<EntityHitResult> hit) {
+    private void cancelCollision(BlockHitResult blockHitResult, CallbackInfo ci, @Local(name = "firstEntityHit") EntityHitResult entityHitResult, @Share("hit")LocalRef<EntityHitResult> hit) {
         if ((Object) this instanceof KnifeEntity knifeEntity && !knifeEntity.hasDealtDamage() && entityHitResult == null && isNoPhysics()) {
             setPos(position().add(getDeltaMovement()));
             ci.cancel();
@@ -62,7 +65,7 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
     @SuppressWarnings("ConstantValue")
     @ModifyExpressionValue(
             method = "stepMoveAndHit",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;noPhysics:Z")
+            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;noPhysics:Z", opcode = Opcodes.GETFIELD)
     )
     private boolean allowCollision(boolean original, @Share("hit") LocalRef<EntityHitResult> hit) {
         return original && hit.get() != null && (!((Object) this instanceof KnifeEntity knifeEntity) || knifeEntity.hasDealtDamage());
