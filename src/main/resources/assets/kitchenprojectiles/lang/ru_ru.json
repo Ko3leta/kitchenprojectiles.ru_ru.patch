@@ -1,0 +1,10 @@
+{
+  "subtitles.entity.kitchenprojectiles.knife.throw": "Нож летит",
+  "subtitles.entity.kitchenprojectiles.knife.hit": "Нож вонзается",
+  "subtitles.entity.kitchenprojectiles.knife.hit_ground": "Нож дребезжит",
+  "subtitles.entity.kitchenprojectiles.knife.return": "Нож возвращается",
+  "death.attack.kitchenprojectiles.knife": "%s был заколот %s",
+  "death.attack.kitchenprojectiles.knife.item": "%s был заколот %s с помощью %s",
+
+  "modmenu.descriptionTranslation.kitchenprojectiles": "Мод добавляет возможность метать ножи из Farmer's Delight."
+}
